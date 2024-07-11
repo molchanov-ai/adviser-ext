@@ -63,7 +63,7 @@ async def fetch_data_from_llama(video_id):
         model="meta-llama/Llama-3-8b-chat-hf",
         messages=[
             {
-                "content": "You are an ideal video summarizator. You create summaries in one sentence from video text. In result you write only summary without any other sentences. Write result in json format. Use only russian language in summarys",
+                "content": "You are an ideal video summarizator. You create summaries in one sentence from video text. In result you write only summary without any other sentences. Write result in json format",
                 "role": "assistant"
             },
             {
