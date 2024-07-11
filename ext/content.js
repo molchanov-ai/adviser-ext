@@ -1,14 +1,11 @@
-document.addEventListener('mouseout', function (event) {
-  let tagName = event.target.tagName.toLowerCase();
-  let className = event.target.className;
-  let id = event.target.id;
-  if (tagName === 'div' && className === 'style-scope ytd-video-preview') {
-    console.log('onout');
-    let popups = document.querySelectorAll('.video-info-popup');
-    console.log(`popusp length: ${popups.length}`)
-    popups.forEach((e) => e.remove());
-  }
-});
+// document.addEventListener('mouseout', function (event) {
+//   let tagName = event.target.tagName.toLowerCase();
+//   let className = event.target.className;
+//   let id = event.target.id;
+//   if (!shadowed && tagName === 'div' && className === 'style-scope ytd-video-preview') {
+//     console.log('onout');
+//   }
+// });
 
 document.addEventListener('mouseover', function (event) {
   let tagName = event.target.tagName.toLowerCase();
@@ -19,11 +16,19 @@ document.addEventListener('mouseover', function (event) {
   // if (tagName === 'ytd-video-preview') {
   //   let videoThumbnail = event.target;
   // } else
+  if (className == 'video-info-popup' || tagName == 'svg' || tagName == 'img' || className == 'style-scope tp-yt-app-drawer' || className == 'yt-simple-endpoint style-scope ytd-mini-guide-entry-renderer' || className == '' || tagName == 'rect') {
+    return;
+  }
   if (tagName === 'div' && className === 'style-scope ytd-video-preview') {
     console.log('onhover');
     let videoThumbnail = document.querySelector('#media-container-link');
     console.log(videoThumbnail);
     showPopup(videoThumbnail);
+  } else {
+    // TODO: also check that popup is not enabled yet
+    let popups = document.querySelectorAll('.video-info-popup');
+    console.log(`popusp length: ${popups.length}, ${tagName}, ${className}, ${id}`)
+    popups.forEach((e) => e.remove());
   }
 });
 
@@ -45,7 +50,7 @@ function showPopup(thumbnail) {
   popup.id = popupId;
   popup.className = 'video-info-popup';
   popup.innerHTML = `
-    <div id="loading">Loading...</div>
+    <div id="loading"></div>
     <div id="clickbait-rating"></div>
     <div id="video-summary"></div>
     <div id="comments-summary"></div>
