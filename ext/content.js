@@ -4,24 +4,23 @@ document.addEventListener('mouseover', function (event) {
   let id = event.target.id;
   console.log(`${tagName}, ${className}, ${id}`);
   // console.log(event.target);
-  if (tagName === 'ytd-video-preview') {
-    let videoThumbnail = event.target;
-    // showPopup(videoThumbnail);
-  } else if (tagName === 'div' && className === 'style-scope ytd-video-preview') {
+  // if (tagName === 'ytd-video-preview') {
+  //   let videoThumbnail = event.target;
+  // } else
+  if (tagName === 'div' && className === 'style-scope ytd-video-preview') {
     console.log('onhover');
     let videoThumbnail = document.querySelector('#media-container-link');
     console.log(videoThumbnail);
     showPopup(videoThumbnail);
-    // console.log(event.target);
-    // console.log(event.parentElement);
-    // let videoThumbnail = event.target.parentElement;
-    // showPopup(videoThumbnail);
   }
 });
 
 function showPopup(thumbnail) {
+  let videoId = thumbnail.href.split('v=')[1];
   let popup = document.createElement('div');
-  popup.id = 'video-info-popup';
+  let popupId = `video-info-popup-${videoId}`;
+  popup.id = popupId;
+  popup.className = 'video-info-popup';
   popup.innerHTML = `
     <div id="loading">Loading...</div>
     <div id="clickbait-rating"></div>
@@ -34,20 +33,18 @@ function showPopup(thumbnail) {
   popup.style.top = `${rect.top + window.scrollY + rect.height}px`;
   popup.style.left = `${rect.left + window.scrollX}px`;
 
-  fetchVideoInfo(thumbnail);
+  fetchVideoInfo(videoId, popupId);
 }
 
-function fetchVideoInfo(thumbnail) {
-  // let videoId = thumbnail.querySelector('#video-preview-container').querySelector('#media-container').querySelector('a').href.split('v=')[1];
-  let videoId = thumbnail.href.split('v=')[1];
-  
+function fetchVideoInfo(videoId, popupId) {
   fetch(`https://507e6687-4236-4ae1-9220-c40483674512-00-9piah707l5p1.spock.replit.dev/video-info?videoId=${videoId}`)
     .then(response => response.json())
     .then(data => {
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('clickbait-rating').innerText = `🥇 Clickbait Rating: ${data.clickbaitRating}`;
-      document.getElementById('video-summary').innerText = `🥈 Video Summary: ${data.videoSummary}`;
-      document.getElementById('comments-summary').innerText = `🥉 TL;DR of Comments: ${data.commentsSummary}`;
+      let parent = document.getElementById(popupId);
+      parent.querySelector('#loading').style.display = 'none';
+      parent.querySelector('#clickbait-rating').innerText = `🥇 Clickbait Rating: ${data.clickbaitRating}`;
+      parent.querySelector('#video-summary').innerText = `🥈 Video Summary: ${data.videoSummary}`;
+      parent.querySelector('#comments-summary').innerText = `🥉 TL;DR of Comments: ${data.commentsSummary}`;
     })
     .catch(error => {
       console.error('Error fetching video info:', error);
