@@ -79,6 +79,7 @@ function showPopup(thumbnail) {
     <div id="clickbait-rating"></div>
     <div id="video-summary"></div>
     <div id="comments-summary"></div>
+    <div id="justification"></div>
   `;
   document.body.appendChild(popup);
   // let bar = '<div class="ldBar" data-value="50" data-preset="bubble"></div>';
@@ -88,6 +89,7 @@ function showPopup(thumbnail) {
   // popup.appendChild()
   var bar1 = new ldBar(popup.querySelector('#loading'), {
     "preset": "rainbow",
+    "stroke-width": 10,
     "stroke":"data:ldbar/res,gradient(0,1,#9df,#9fd,#df9,#fd9)",
     "path":"M10 20Q20 15 30 20Q40 25 50 20Q60 15 70 20Q80 25 90 20"
   });
@@ -113,6 +115,7 @@ function fetchVideoInfo(videoId, popupId) {
       parent.querySelector('#clickbait-rating').innerText = `🥇 Clickbait Rating: ${data.clickbaitRating}`;
       parent.querySelector('#video-summary').innerText = `🥈 Video Summary: ${data.videoSummary}`;
       parent.querySelector('#comments-summary').innerText = `🥉 TL;DR of Comments: ${data.commentsSummary}`;
+      parent.querySelector('#justification').innerText = `❗️ Justification: ${data.justification}`;
     })
     .catch(error => {
       console.error('Error fetching video info:', error);

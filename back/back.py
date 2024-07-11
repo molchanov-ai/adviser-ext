@@ -35,14 +35,15 @@ async def read_root():
 async def video_info(videoId: str):
     video_id = videoId
 
-    clickbait_rating, video_summary, comments_summary = await fetch_data_from_llama(
+    clickbait_rating, video_summary, comments_summary, justification = await fetch_data_from_llama(
         video_id)
 
     return PlainTextResponse(
         content=json.dumps({
             'clickbaitRating': clickbait_rating,
             'videoSummary': video_summary,
-            'commentsSummary': comments_summary
+            'commentsSummary': comments_summary,
+            'justification': justification
         }))
 
 
@@ -97,7 +98,7 @@ async def fetch_data_from_llama(video_id):
           model="meta-llama/Llama-3-8b-chat-hf",
           messages=[
               {
-                  "content": "You are an ideal video comments summarizator. You create one sentence summary of the comments. You must return only one sentence summary for all comments!! Otherwise you will be killed!! Write result in json format",
+                  "content": "You are an ideal video comments summarizator. You create one sentence summary of the comments. You must return only one sentence summary for all comments!! Otherwise you will be killed!! Pay more attention to emotions and reactions of people. You should understand do they like the video or not and why. Write result in json format",
                   "role": "system"
               },
               {
@@ -120,4 +121,4 @@ async def fetch_data_from_llama(video_id):
                 f'Could not json with processing summary: {comments_text}')
           logging.error(f'Could not json summary: {comments_text}')
 
-    return ["45/100", text, comments_text]
+    return ["45/100", text, comments_text, 'good video tbh']
