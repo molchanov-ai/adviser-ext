@@ -4,9 +4,6 @@
   "version": "1.0",
   "description": "Shows video information on hover",
   "permissions": ["activeTab", "scripting"],
-  "background": {
-    "service_worker": "background.js"
-  },
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/*"],
