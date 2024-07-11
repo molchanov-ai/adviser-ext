@@ -1,7 +1,8 @@
-fastapi==0.88.0
-uvicorn==0.20.0
+fastapi
+uvicorn
 uvicorn[standard]
-protobuf==3.20.*
-google-api-python-client==2.126.0
+protobuf
+google-api-python-client
 python-multipart
 youtube-transcript-api
+together
