@@ -16,10 +16,15 @@ document.addEventListener('mouseover', function (event) {
   // if (tagName === 'ytd-video-preview') {
   //   let videoThumbnail = event.target;
   // } else
-  if (className == 'video-info-popup' || tagName == 'svg' || tagName == 'img' || className == 'style-scope tp-yt-app-drawer' || className == 'yt-simple-endpoint style-scope ytd-mini-guide-entry-renderer' || className == '' || tagName == 'rect') {
+  if (className == 'video-info-popup' || tagName == 'svg' || tagName == 'img' || className == 'style-scope tp-yt-app-drawer' || className == 'yt-simple-endpoint style-scope ytd-mini-guide-entry-renderer' || className == '' || tagName == 'rect' || className == 'ldBar') {
     return;
   }
   if (tagName === 'div' && className === 'style-scope ytd-video-preview') {
+    let popup = document.querySelector('.video-info-popup');
+    console.log(popup);
+    if (popup != null) {
+      return;
+    }
     console.log('onhover');
     let videoThumbnail = document.querySelector('#media-container-link');
     console.log(videoThumbnail);
@@ -61,7 +66,7 @@ function showPopup(thumbnail) {
   // let barNode = document.createElement('div');
   // barNode.className ='ldBar';
   // popup.appendChild()
-  var bar1 = new ldBar(`#${popup.id}`, {"preset": "bubble"});
+  var bar1 = new ldBar(popup.querySelector('#loading'), {"preset": "bubble"});
   /* ldBar stored in the element */
   // var bar2 = document.getElementById(popup.id).ldBar;
   bar1.set(60);
@@ -69,7 +74,7 @@ function showPopup(thumbnail) {
   let rect = thumbnail.getBoundingClientRect();
   popup.style.top = `${rect.top + window.scrollY + rect.height}px`;
   popup.style.left = `${rect.left + window.scrollX}px`;
-  popup.style.width = '600px';
+  // popup.style.width = '600px';
 
   fetchVideoInfo(videoId, popupId);
 }
@@ -79,7 +84,8 @@ function fetchVideoInfo(videoId, popupId) {
     .then(response => response.json())
     .then(data => {
       let parent = document.getElementById(popupId);
-      parent.querySelector('#loading').style.display = 'none';
+      console.log(parent.ldBar);
+      parent.querySelector('#loading').remove();
       parent.querySelector('#clickbait-rating').innerText = `🥇 Clickbait Rating: ${data.clickbaitRating}`;
       parent.querySelector('#video-summary').innerText = `🥈 Video Summary: ${data.videoSummary}`;
       parent.querySelector('#comments-summary').innerText = `🥉 TL;DR of Comments: ${data.commentsSummary}`;
