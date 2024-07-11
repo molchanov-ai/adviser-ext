@@ -10,8 +10,8 @@
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/*"],
-      "js": ["content.js"],
-      "css": ["styles.css"]
+      "js": ["content.js", "loading-bar.js"],
+      "css": ["styles.css", "loading-bar.css"]
     }
   ],
   "action": {

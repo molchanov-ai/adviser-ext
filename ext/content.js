@@ -29,6 +29,7 @@ document.addEventListener('mouseover', function (event) {
 
 function showPopup(thumbnail) {
   let videoId = thumbnail.href.split('v=')[1];
+  // TODO: this popup must not be hoverable
   let popup = document.createElement('div');
   let popupId = `video-info-popup-${videoId}`;
   popup.id = popupId;
@@ -40,10 +41,20 @@ function showPopup(thumbnail) {
     <div id="comments-summary"></div>
   `;
   document.body.appendChild(popup);
+  // let bar = '<div class="ldBar" data-value="50" data-preset="bubble"></div>';
+  // popup.innerHTML += bar;
+  // let barNode = document.createElement('div');
+  // barNode.className ='ldBar';
+  // popup.appendChild()
+  var bar1 = new ldBar(`#${popup.id}`, {"preset": "bubble"});
+  /* ldBar stored in the element */
+  // var bar2 = document.getElementById(popup.id).ldBar;
+  bar1.set(60);
 
   let rect = thumbnail.getBoundingClientRect();
   popup.style.top = `${rect.top + window.scrollY + rect.height}px`;
   popup.style.left = `${rect.left + window.scrollX}px`;
+  popup.style.width = '600px';
 
   fetchVideoInfo(videoId, popupId);
 }
