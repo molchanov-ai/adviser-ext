@@ -1,3 +1,15 @@
+document.addEventListener('mouseout', function (event) {
+  let tagName = event.target.tagName.toLowerCase();
+  let className = event.target.className;
+  let id = event.target.id;
+  if (tagName === 'div' && className === 'style-scope ytd-video-preview') {
+    console.log('onout');
+    let popups = document.querySelectorAll('.video-info-popup');
+    console.log(`popusp length: ${popups.length}`)
+    popups.forEach((e) => e.remove());
+  }
+});
+
 document.addEventListener('mouseover', function (event) {
   let tagName = event.target.tagName.toLowerCase();
   let className = event.target.className;
