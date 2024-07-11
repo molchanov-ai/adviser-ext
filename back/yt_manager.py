@@ -1,6 +1,7 @@
-from apiclient.discovery import build
+from googleapiclient.discovery import build
+
+import os
 
 class YtManager:
-  with open('creds.env', 'r') as f:
-    api_key = f.read()
-    youtube = build('youtube', 'v3', developerKey=api_key)
+  api_key = os.environ['YT_API_KEY']
+  youtube = build('youtube', 'v3', developerKey=api_key)

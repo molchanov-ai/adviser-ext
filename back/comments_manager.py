@@ -2,6 +2,7 @@ from yt_manager import YtManager
 
 class CommentsManager:
 
+  # TODO: async
   @classmethod
   def comments(cls, video_id: str):
     comments_request = YtManager.youtube.commentThreads().list(part='snippet,replies',
@@ -9,7 +10,7 @@ class CommentsManager:
     response = comments_request.execute()
     # print(response)
 
-    if 'items' not in response:
+    if 'items' not in response or len(response['items']) == 0:
       return None
 
     comments = ''

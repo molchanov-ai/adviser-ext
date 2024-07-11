@@ -1,3 +1,4 @@
+from comments_manager import CommentsManager
 from content_manager import ContentManager
 import requests
 from fastapi import FastAPI, Query, File, UploadFile, Form
@@ -57,14 +58,16 @@ async def fetch_data_from_llama(video_id):
       batches.append(content[last_word: last_word + batch_size])
       last_word += batch_size
 
-    # NOTE: 5 sec requirements don't give us an opportunity to load more sentences. But we could to load from different pieces of text
+    # NOTE: 5 sec requirements don't give us an opportunity to load more sentences.
+    # But we could to load from different pieces of text
+    # But the main of the video is going at first max sentences
     text = batches[0]
     response = await llama.chat.completions.create(
         model="meta-llama/Llama-3-8b-chat-hf",
         messages=[
             {
                 "content": "You are an ideal video summarizator. You create summaries in one sentence from video text. In result you write only summary without any other sentences. Write result in json format",
-                "role": "assistant"
+                "role": "system"
             },
             {
                 "content": f'Please, create a one-sentence summary of this video text: {text}',
@@ -84,5 +87,37 @@ async def fetch_data_from_llama(video_id):
         except:
            logging.error(f'Could not json with processing summary: {text}')
         logging.error(f'Could not json summary: {text}')
-    # return "45/100", "This video explains the basics of AI and its applications.", "This video is very informative and well-explained."
-    return ["45/100", text, "Cool Video"]
+
+    comments = CommentsManager.comments(video_id)
+    comments = comments[:int(max_tokens*tokens_words)]
+    if comments is None:
+      comments_text = 'Not enough comments'
+    else:
+      response = await llama.chat.completions.create(
+          model="meta-llama/Llama-3-8b-chat-hf",
+          messages=[
+              {
+                  "content": "You are an ideal video comments summarizator. You create one sentence summary of the comments. You must return only one sentence summary for all comments!! Otherwise you will be killed!! Write result in json format",
+                  "role": "system"
+              },
+              {
+                  "content": f'Please, create a one-sentence summary of this video comments: {comments}',
+                  "role": "user"
+              },
+          ],
+      )
+
+      comments_text = response.choices[0].message.content
+      try:
+        comments_text: str = json.loads(comments_text)['summary']
+      except:
+          try:
+            first_bracet = comments_text.index('{')
+            comments_text = comments_text[first_bracet:]
+            comments_text = json.loads(comments_text)['summary']
+          except:
+            logging.error(
+                f'Could not json with processing summary: {comments_text}')
+          logging.error(f'Could not json summary: {comments_text}')
+
+    return ["45/100", text, comments_text]

@@ -1,6 +1,7 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 
 class ContentManager:
+  # TODO: async
   @classmethod
   def content(cls, video_id: str):
     transcripts = YouTubeTranscriptApi.list_transcripts(video_id)
