@@ -1,11 +1,21 @@
-// document.addEventListener('mouseout', function (event) {
-//   let tagName = event.target.tagName.toLowerCase();
-//   let className = event.target.className;
-//   let id = event.target.id;
-//   if (!shadowed && tagName === 'div' && className === 'style-scope ytd-video-preview') {
-//     console.log('onout');
-//   }
-// });
+let timerId = null;
+
+function startProcessing(target) {
+  showPopup(target);
+}
+
+document.addEventListener('mouseout', function (event) {
+  let tagName = event.target.tagName.toLowerCase();
+  let className = event.target.className;
+  let id = event.target.id;
+  if (tagName === 'div' && className === 'style-scope ytd-video-preview') {
+    console.log('onout');
+    if (timerId != null) {
+      clearTimeout(timerId);
+      timerId = null;
+    }
+  }
+});
 
 document.addEventListener('mouseover', function (event) {
   let tagName = event.target.tagName.toLowerCase();
@@ -16,9 +26,12 @@ document.addEventListener('mouseover', function (event) {
   // if (tagName === 'ytd-video-preview') {
   //   let videoThumbnail = event.target;
   // } else
+
+  // Mouse at popup
   if (className == 'video-info-popup' || tagName == 'svg' || tagName == 'img' || className == 'style-scope tp-yt-app-drawer' || className == 'yt-simple-endpoint style-scope ytd-mini-guide-entry-renderer' || className == '' || tagName == 'rect' || className == 'ldBar') {
     return;
   }
+  // mouse at thumbnail
   if (tagName === 'div' && className === 'style-scope ytd-video-preview') {
     let popup = document.querySelector('.video-info-popup');
     console.log(popup);
@@ -28,9 +41,16 @@ document.addEventListener('mouseover', function (event) {
     console.log('onhover');
     let videoThumbnail = document.querySelector('#media-container-link');
     console.log(videoThumbnail);
-    showPopup(videoThumbnail);
-  } else {
-    // TODO: also check that popup is not enabled yet
+    if (timerId != null) {
+      clearTimeout(timerId);
+      timerId = null;
+    }
+    timerId = setTimeout(() => startProcessing(videoThumbnail), 1500);
+  } else { // Mouse not on thumbnail and popup
+    if (timerId != null) {
+      clearTimeout(timerId);
+      timerId = null;
+    }
     let popups = document.querySelectorAll('.video-info-popup');
     console.log(`popusp length: ${popups.length}, ${tagName}, ${className}, ${id}`)
     popups.forEach((e) => e.remove());
