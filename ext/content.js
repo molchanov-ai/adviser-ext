@@ -28,7 +28,17 @@ document.addEventListener('mouseover', function (event) {
 });
 
 function showPopup(thumbnail) {
-  let videoId = thumbnail.href.split('v=')[1];
+  if (thumbnail.href.includes('v=')) {
+    var videoId = thumbnail.href.split('v=')[1].split('&')[0];
+  } else if (thumbnail.href.includes('shorts')) {
+    var videoId = thumbnail.href.split('/').at(-1);
+  } else {
+    console.error('Incompatible state');
+    return;
+  }
+  if (videoId.includes('&')) {
+    videoId = videoId.split('&')[0];
+  }
   // TODO: this popup must not be hoverable
   let popup = document.createElement('div');
   let popupId = `video-info-popup-${videoId}`;
