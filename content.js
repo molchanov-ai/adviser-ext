@@ -1,10 +1,21 @@
 document.addEventListener('mouseover', function (event) {
-  console.log('onhover');
-  console.log(event.target.tagName);
-  if (event.target.tagName.toLowerCase() === 'ytd-video-preview') {
-  console.log('thb');
+  let tagName = event.target.tagName.toLowerCase();
+  let className = event.target.className;
+  let id = event.target.id;
+  console.log(`${tagName}, ${className}, ${id}`);
+  // console.log(event.target);
+  if (tagName === 'ytd-video-preview') {
     let videoThumbnail = event.target;
+    // showPopup(videoThumbnail);
+  } else if (tagName === 'div' && className === 'style-scope ytd-video-preview') {
+    console.log('onhover');
+    let videoThumbnail = document.querySelector('#media-container-link');
+    console.log(videoThumbnail);
     showPopup(videoThumbnail);
+    // console.log(event.target);
+    // console.log(event.parentElement);
+    // let videoThumbnail = event.target.parentElement;
+    // showPopup(videoThumbnail);
   }
 });
 
@@ -27,7 +38,8 @@ function showPopup(thumbnail) {
 }
 
 function fetchVideoInfo(thumbnail) {
-  let videoId = thumbnail.querySelector('#video-preview-container').querySelector('#media-container').querySelector('a').href.split('v=')[1];
+  // let videoId = thumbnail.querySelector('#video-preview-container').querySelector('#media-container').querySelector('a').href.split('v=')[1];
+  let videoId = thumbnail.href.split('v=')[1];
   
   fetch(`https://507e6687-4236-4ae1-9220-c40483674512-00-9piah707l5p1.spock.replit.dev/video-info?videoId=${videoId}`)
     .then(response => response.json())
