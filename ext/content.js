@@ -66,10 +66,14 @@ function showPopup(thumbnail) {
   // let barNode = document.createElement('div');
   // barNode.className ='ldBar';
   // popup.appendChild()
-  var bar1 = new ldBar(popup.querySelector('#loading'), {"preset": "bubble"});
+  var bar1 = new ldBar(popup.querySelector('#loading'), {
+    "preset": "rainbow",
+    "stroke":"data:ldbar/res,gradient(0,1,#9df,#9fd,#df9,#fd9)",
+    "path":"M10 20Q20 15 30 20Q40 25 50 20Q60 15 70 20Q80 25 90 20"
+  });
   /* ldBar stored in the element */
   // var bar2 = document.getElementById(popup.id).ldBar;
-  bar1.set(60);
+  bar1.set(100);
 
   let rect = thumbnail.getBoundingClientRect();
   popup.style.top = `${rect.top + window.scrollY + rect.height}px`;
