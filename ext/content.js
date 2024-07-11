@@ -4,18 +4,18 @@ function startProcessing(target) {
   showPopup(target);
 }
 
-document.addEventListener('mouseout', function (event) {
-  let tagName = event.target.tagName.toLowerCase();
-  let className = event.target.className;
-  let id = event.target.id;
-  if (tagName === 'div' && className === 'style-scope ytd-video-preview') {
-    console.log('onout');
-    if (timerId != null) {
-      clearTimeout(timerId);
-      timerId = null;
-    }
-  }
-});
+// document.addEventListener('mouseout', function (event) {
+//   let tagName = event.target.tagName.toLowerCase();
+//   let className = event.target.className;
+//   let id = event.target.id;
+//   if (tagName === 'div' && className === 'style-scope ytd-video-preview') {
+//     console.log('onout');
+//     if (timerId != null) {
+//       clearTimeout(timerId);
+//       timerId = null;
+//     }
+//   }
+// });
 
 document.addEventListener('mouseover', function (event) {
   let tagName = event.target.tagName.toLowerCase();
