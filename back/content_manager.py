@@ -2,8 +2,8 @@ from youtube_transcript_api import YouTubeTranscriptApi
 
 class ContentManager:
   @classmethod
-  def content(cls):
-    transcripts = YouTubeTranscriptApi.list_transcripts('LegCx9q_I8s')
+  def content(cls, video_id: str):
+    transcripts = YouTubeTranscriptApi.list_transcripts(video_id)
     # TODO: check if no transcript available
     for t in transcripts:
       srt = t.fetch()

@@ -1,3 +1,4 @@
+from content_manager import ContentManager
 import requests
 from fastapi import FastAPI, Query, File, UploadFile, Form
 from fastapi.responses import PlainTextResponse
@@ -44,20 +45,16 @@ async def video_info(videoId: str):
 
 
 async def fetch_data_from_llama(video_id):
+    content = ContentManager.content(video_id)
     response = await llama.chat.completions.create(
         model="meta-llama/Llama-3-8b-chat-hf",
         messages=[
             {
-                "content": "hello",
-                "role": "user"
-            },
-            {
-                "content":
-                "Hello! It's nice to meet you. Is there something I can help you with, or would you like to chat?",
+                "content": "You are an ideal video summarizator. You create summaries in one sentence from video text",
                 "role": "assistant"
             },
             {
-                "content": "how do you do?",
+                "content": f'Please, create a one-sentence summary of this video text: {content}',
                 "role": "user"
             },
         ],
