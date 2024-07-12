@@ -51,7 +51,7 @@ async def video_info(videoId: str):
 async def fetch_data_from_llama(video_id):
     # case no words or transcriptions or Exception
     # so we need comments here to make content summary from it
-    comments = CommentsManager.comments(video_id)
+    comments = await CommentsManager.comments(video_id)
     try:
       content = ContentManager.content(video_id)
     except Exception as e:

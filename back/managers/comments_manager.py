@@ -1,14 +1,14 @@
 from .yt_manager import YtManager
 
+import asyncio
+
 class CommentsManager:
 
-  # TODO: async
   @classmethod
-  def comments(cls, video_id: str):
+  async def comments(cls, video_id: str):
     comments_request = YtManager.youtube.commentThreads().list(part='snippet,replies',
                                                     maxResults=100, videoId=video_id)
-    response = comments_request.execute()
-    # print(response)
+    response = await asyncio.to_thread(comments_request.execute)
 
     if 'items' not in response or len(response['items']) == 0:
       return None
@@ -24,9 +24,5 @@ class CommentsManager:
           reply_text = reply['snippet']['textDisplay']
           replies += f'{reply_text}\n'
       comments += f'Comment: {text}\n{replies}'
-
-
-    # response['items'][0]['snippet']['topLevelComment']['snippet']['textDisplay']
-    # response['items'][3]['replies']['comments'][0]['snippet']['textDisplay']
 
     return comments
