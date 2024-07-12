@@ -112,10 +112,10 @@ function fetchVideoInfo(videoId, popupId) {
       let parent = document.getElementById(popupId);
       console.log(parent.ldBar);
       parent.querySelector('#loading').remove();
-      parent.querySelector('#clickbait-rating').innerText = `🥇 Clickbait Rating: ${data.clickbaitRating}`;
-      parent.querySelector('#video-summary').innerText = `🥈 Video Summary: ${data.videoSummary}`;
-      parent.querySelector('#comments-summary').innerText = `🥉 TL;DR of Comments: ${data.commentsSummary}`;
-      parent.querySelector('#justification').innerText = `❗️ Justification: ${data.justification}`;
+      parent.querySelector('#clickbait-rating').innerHTML = `🥇 <b>Clickbait Rating:</b> ${data.clickbaitRating}`;
+      parent.querySelector('#video-summary').innerHTML = `🥈 <b>Video Summary:</b> ${data.videoSummary}`;
+      parent.querySelector('#comments-summary').innerHTML = `🥉 <b>TL;DR of Comments:</b> ${data.commentsSummary}`;
+      parent.querySelector('#justification').innerHTML = `❗️ <b>Justification:</b> ${data.justification}`;
     })
     .catch(error => {
       console.error('Error fetching video info:', error);
