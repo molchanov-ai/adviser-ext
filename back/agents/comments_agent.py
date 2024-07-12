@@ -12,6 +12,7 @@ class CommentsAgent:
     tokens_words = 2/3
     max_tokens = 7600
 
+    # Trusting the Central limit theorem makes us happy
     comments = comments[:int(max_tokens*tokens_words)]
     if comments is None:
       comments_summary = 'Not enough comments'
