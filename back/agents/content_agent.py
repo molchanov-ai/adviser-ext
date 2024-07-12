@@ -32,16 +32,11 @@ class ContentAgent:
 
     content_summary = response.choices[0].message.content
     try:
-      content_summary: str = json.loads(content_summary)['summary']
+      first_bracet = content_summary.index('{')
+      last_bracet = content_summary.rindex('}')
+      json_comments_str = content_summary[first_bracet: last_bracet+1]
+      content_summary: str = json.loads(json_comments_str)['summary']
     except:
-        try:
-          first_bracet = content_summary.index('{')
-          last_bracet = content_summary.rindex('}')
-          content_summary = content_summary[first_bracet:last_bracet+1]
-          content_summary = json.loads(content_summary)['summary']
-        except:
-           logging.error(
-               f'Could not json with processing summary: {content_summary}')
         logging.error(f'Could not json summary: {content_summary}')
 
     return content_summary

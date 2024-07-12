@@ -12,11 +12,11 @@ class CommentsAgent:
     tokens_words = 2/3
     max_tokens = 7600
 
-    # Trusting the Central limit theorem makes us happy
-    comments = comments[:int(max_tokens*tokens_words)]
     if comments is None:
       comments_summary = 'Not enough comments'
     else:
+      # Trusting the Central limit theorem makes us happy
+      comments = comments[:int(max_tokens*tokens_words)]
       ret_format = '{"summary": "<your summary>"}'
       response = await llama.chat.completions.create(
           model="meta-llama/Llama-3-8b-chat-hf",
