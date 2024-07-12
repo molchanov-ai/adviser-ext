@@ -3,6 +3,12 @@ import os
 
 from together import AsyncTogether
 
+'''
+With such simple arch we don't need to
+check RateLimit errors because
+if next llama has RateLimit error
+we have no available llama
+'''
 class Balancer:
   _llamas = [AsyncTogether(api_key=os.environ['LLAMA_API_KEY']), AsyncTogether(
       api_key=os.environ['LLAMA_API_KEY2']), AsyncTogether(
