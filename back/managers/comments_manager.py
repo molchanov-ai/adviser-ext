@@ -1,4 +1,4 @@
-from yt_manager import YtManager
+from .yt_manager import YtManager
 
 class CommentsManager:
 

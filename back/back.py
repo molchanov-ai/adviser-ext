@@ -1,14 +1,15 @@
-from comments_manager import CommentsManager
-from content_manager import ContentManager
-from video_info_manager import VideoInfoManager
-import requests
-from fastapi import FastAPI, Query, File, UploadFile, Form
-from fastapi.responses import PlainTextResponse
-from fastapi.middleware.cors import CORSMiddleware
+from managers.comments_manager import CommentsManager
+from managers.content_manager import ContentManager
+from managers.video_info_manager import VideoInfoManager
+
 import json
 import logging
-from together import AsyncTogether
 import os
+
+from together import AsyncTogether
+from fastapi import FastAPI
+from fastapi.responses import PlainTextResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 llamas = [AsyncTogether(api_key=os.environ['LLAMA_API_KEY']), AsyncTogether(
     api_key=os.environ['LLAMA_API_KEY2'])]
