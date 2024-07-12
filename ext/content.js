@@ -11,23 +11,30 @@ document.addEventListener('mouseover', function (event) {
   let id = event.target.id;
   console.log(`${tagName}, ${className}, ${id}`);
 
+  let staticPreviewClassName = 'yt-core-image yt-core-image--fill-parent-height yt-core-image--fill-parent-width yt-core-image--content-mode-scale-aspect-fill yt-core-image--loaded';
+  let dynamicPreviewCondition = tagName === 'div' && className === 'style-scope ytd-video-preview';
+
   // Mouse at popup
-  if (className == 'video-info-popup' || tagName == 'svg' ||
-  tagName == 'path' || tagName == 'img' ||
-  className == 'style-scope tp-yt-app-drawer' ||
-  className == 'yt-simple-endpoint style-scope ytd-mini-guide-entry-renderer' ||
-  className == '' || tagName == 'rect' || className == 'ldBar') {
+  if (className != staticPreviewClassName && (className == 'video-info-popup' || tagName == 'svg' ||
+    tagName == 'path' || tagName == 'img' ||
+    className == 'style-scope tp-yt-app-drawer' ||
+    className == 'yt-simple-endpoint style-scope ytd-mini-guide-entry-renderer' ||
+    className == '' || tagName == 'rect' || className == 'ldBar')) {
     return;
   }
   // mouse at thumbnail
-  if (tagName === 'div' && className === 'style-scope ytd-video-preview') {
+  if (className == staticPreviewClassName || dynamicPreviewCondition) {
     let popup = document.querySelector('.video-info-popup');
 
     if (popup != null) {
       return;
     }
-    
-    let videoThumbnail = document.querySelector('#media-container-link');
+
+    if (className == staticPreviewClassName) {
+      var videoThumbnail = event.target.parentNode.parentNode;
+    } else {
+      var videoThumbnail = document.querySelector('#media-container-link');
+    }
 
     if (timerId != null) {
       clearTimeout(timerId);
@@ -58,7 +65,7 @@ function showPopup(thumbnail) {
   if (videoId.includes('&')) {
     videoId = videoId.split('&')[0];
   }
-  
+
   let popup = document.createElement('div');
   let popupId = `video-info-popup-${videoId}`;
 
@@ -72,12 +79,12 @@ function showPopup(thumbnail) {
     <div id="justification"></div>
   `;
   document.body.appendChild(popup);
-  
+
   var bar1 = new ldBar(popup.querySelector('#loading'), {
     "preset": "rainbow",
     "stroke-width": 10,
-    "stroke":"data:ldbar/res,gradient(0,1,#9df,#9fd,#df9,#fd9)",
-    "path":"M10 20Q20 5 30 20Q40 35 50 20Q60 5 70 20Q80 35 90 20"
+    "stroke": "data:ldbar/res,gradient(0,1,#9df,#9fd,#df9,#fd9)",
+    "path": "M10 20Q20 5 30 20Q40 35 50 20Q60 5 70 20Q80 35 90 20"
   });
   bar1.set(100);
 
@@ -101,8 +108,7 @@ function fetchVideoInfo(videoId, popupId) {
     })
     .catch(error => {
       parent.querySelector('#loading').remove();
-      parent.querySelector('#clickbait-rating').innerHTML = `<b>Error:</b> sorry, please try again. Also note that we don't support broadcasts right now`;
+      parent.querySelector('#clickbait-rating').innerHTML = `<b>Error:</b> sorry, please try again. Also note that we don't support broadcasts at the moment`;
       console.error('Error fetching video info:', error);
     });
 }
-
