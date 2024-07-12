@@ -21,11 +21,11 @@ class CommentsAgent:
           model="meta-llama/Llama-3-8b-chat-hf",
           messages=[
               {
-                  "content": "You are an ideal video comments summarizator. You create one sentence summary of the comments. You must return only one sentence summary for all comments!! Otherwise you will be killed!! Pay more attention to emotions and reactions of people. You should understand do they like the video or not and why. Write result in json format",
+                  "content": "You are an ideal video comments summarizator. You create one sentence summary of the comments. You must return only one sentence summary for all comments!! Otherwise you will be killed!! Pay more attention to emotions and reactions of people. You should understand do they like the video or not and why. You must use smiles for better text reading or you will be killed!! Write result in correct json format that can be compiled in python",
                   "role": "system"
               },
               {
-                  "content": f'Please, create a one-sentence summary of this video comments. Return format: {ret_format}. Comments:\n{comments}',
+                  "content": f'Please, create a one-sentence summary of this video comments. Return format: {ret_format}. Use escaping for quotes in text because you are returning json!! Comments:\n{comments}',
                   "role": "user"
               },
           ],
@@ -33,16 +33,19 @@ class CommentsAgent:
 
       comments_summary = response.choices[0].message.content
       try:
-        comments_summary: str = json.loads(comments_summary)['summary']
+        first_bracet = comments_summary.index('{')
+        last_bracet = comments_summary.rindex('}')
+        json_comments_str = comments_summary[first_bracet: last_bracet+1]
+        value_index = json_comments_str.index(':')
+        value = json_comments_str[value_index+1:].lstrip()[1:-2]
+        value = value.replace('"', "'")
+        key = json_comments_str[:value_index]
+        closing = '}'
+        prepared_str = f'{key}: "{value}"{closing}'
+
+        logging.error(f'_prepared_str_: {prepared_str}')
+        comments_summary: str = json.loads(prepared_str)['summary']
       except:
-          try:
-            first_bracet = comments_summary.index('{')
-            last_bracet = comments_summary.rindex('}')
-            comments_summary = comments_summary[first_bracet:last_bracet+1]
-            comments_summary = json.loads(comments_summary)['summary']
-          except:
-            logging.error(
-                f'Could not json with processing summary: {comments_summary}')
           logging.error(f'Could not json summary: {comments_summary}')
 
     return comments_summary

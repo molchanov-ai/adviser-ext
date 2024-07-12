@@ -39,4 +39,4 @@ class RaterAgent:
       rating = rating_text[:int(len(rating_text)/2)]
       justification = rating_text[int(len(rating_text)/2):]
 
-    return rating, justification
+    return rating, f'{justification}/100'
