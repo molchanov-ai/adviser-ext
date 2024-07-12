@@ -44,7 +44,7 @@ class CommentsAgent:
         closing = '}'
         prepared_str = f'{key}: "{value}"{closing}'
 
-        logging.error(f'_prepared_str_: {prepared_str}')
+        logging.debug(f'_prepared_str_: {prepared_str}')
         comments_summary: str = json.loads(prepared_str)['summary']
       except:
           logging.error(f'Could not json summary: {comments_summary}')
