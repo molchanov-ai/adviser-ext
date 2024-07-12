@@ -89,11 +89,10 @@ function showPopup(thumbnail) {
 }
 
 function fetchVideoInfo(videoId, popupId) {
+  let parent = document.getElementById(popupId);
   fetch(`https://507e6687-4236-4ae1-9220-c40483674512-00-9piah707l5p1.spock.replit.dev/video-info?videoId=${videoId}`)
     .then(response => response.json())
     .then(data => {
-      let parent = document.getElementById(popupId);
-      console.log(parent.ldBar);
       parent.querySelector('#loading').remove();
       parent.querySelector('#clickbait-rating').innerHTML = `🥇 <b>Clickbait Rating:</b> ${data.clickbaitRating}`;
       parent.querySelector('#video-summary').innerHTML = `🥈 <b>Video Summary:</b> ${data.videoSummary}`;
@@ -101,6 +100,8 @@ function fetchVideoInfo(videoId, popupId) {
       parent.querySelector('#justification').innerHTML = `❗️ <b>Justification:</b> ${data.justification}`;
     })
     .catch(error => {
+      parent.querySelector('#loading').remove();
+      parent.querySelector('#clickbait-rating').innerHTML = `<b>Error:</b> sorry, please try again. Also note that we don't support broadcasts right now`;
       console.error('Error fetching video info:', error);
     });
 }
