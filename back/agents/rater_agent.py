@@ -36,7 +36,7 @@ class RaterAgent:
       justification: str = jsoned['justification']
     except:
       logging.error(f'_Could_not_json_rating_: {rating_text}')
-      rating = rating_text[:int(len(rating_text)/2)]
-      justification = rating_text[int(len(rating_text)/2):]
+      rating = 0
+      justification = rating_text
 
     return f'{rating}/100', justification

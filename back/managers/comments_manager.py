@@ -1,6 +1,7 @@
 from .yt_manager import YtManager
 
 import asyncio
+import logging
 
 class CommentsManager:
 
@@ -11,6 +12,7 @@ class CommentsManager:
     try:
       response = await asyncio.to_thread(comments_request.execute)
     except Exception as e:
+      logging.error(f'_comments_error_:{e}')
       response = None
 
     if response is None or 'items' not in response or len(response['items']) == 0:
