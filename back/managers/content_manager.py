@@ -1,13 +1,13 @@
+import asyncio
+
 from youtube_transcript_api import YouTubeTranscriptApi
 
 class ContentManager:
-  # TODO: async
   @classmethod
-  def content(cls, video_id: str):
-    transcripts = YouTubeTranscriptApi.list_transcripts(video_id)
-    # TODO: check if no transcript available
+  async def content(cls, video_id: str):
+    transcripts = await asyncio.to_thread(YouTubeTranscriptApi.list_transcripts, video_id=video_id)
     for t in transcripts:
-      srt = t.fetch()
+      srt = await asyncio.to_thread(t.fetch)
       text = ' '.join([x['text'] for x in srt])
       break
     return text

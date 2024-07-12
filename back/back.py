@@ -53,7 +53,7 @@ async def fetch_data_from_llama(video_id):
     # so we need comments here to make content summary from it
     comments = await CommentsManager.comments(video_id)
     try:
-      content = ContentManager.content(video_id)
+      content = await ContentManager.content(video_id)
     except Exception as e:
       logging.error(f'_no_content_: {e}')
       content = f'We can not get video content so you should understand its content by comments. The comments:\n{comments}'
