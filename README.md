@@ -20,7 +20,7 @@ pip3 install -r requirements.txt
 ```
 Start the server
 
-Replace url with yours in `fetchVideoInfo` function in `ext/content.js` file
+Replace url with yours in `ext/content.js` file
 
 Load Unpacked extension in Google Chrome from `ext/` directory
 

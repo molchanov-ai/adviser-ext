@@ -1,6 +1,8 @@
 // 1.5 sec delay for deliberate user's video choice
 let timerId = null;
 
+let url = 'https://507e6687-4236-4ae1-9220-c40483674512-00-9piah707l5p1.spock.replit.dev';
+
 function startProcessing(target) {
   showPopup(target);
 }
@@ -97,7 +99,7 @@ function showPopup(thumbnail) {
 
 function fetchVideoInfo(videoId, popupId) {
   let parent = document.getElementById(popupId);
-  fetch(`https://507e6687-4236-4ae1-9220-c40483674512-00-9piah707l5p1.spock.replit.dev/video-info?videoId=${videoId}`)
+  fetch(`${url}/video-info?videoId=${videoId}`)
     .then(response => response.json())
     .then(data => {
       parent.querySelector('#loading').remove();
