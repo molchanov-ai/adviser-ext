@@ -1,5 +1,6 @@
 from comments_manager import CommentsManager
 from content_manager import ContentManager
+from video_info_manager import VideoInfoManager
 import requests
 from fastapi import FastAPI, Query, File, UploadFile, Form
 from fastapi.responses import PlainTextResponse
@@ -9,7 +10,8 @@ import logging
 from together import AsyncTogether
 import os
 
-llama = AsyncTogether(api_key=os.environ['LLAMA_API_KEY'])
+llamas = [AsyncTogether(api_key=os.environ['LLAMA_API_KEY']), AsyncTogether(
+    api_key=os.environ['LLAMA_API_KEY2'])]
 
 app = FastAPI()
 
@@ -48,8 +50,18 @@ async def video_info(videoId: str):
 
 
 async def fetch_data_from_llama(video_id):
-    # TODO: case no words or transcriptions
+    # TODO: case no words or transcriptions or Exception
+    # so we need comments here to make content summary from it
     content = ContentManager.content(video_id)
+    comments = CommentsManager.comments(video_id)
+    video_info = VideoInfoManager.video_info(video_id)
+
+    if not video_info:
+      return ['', '', '', 'Error occured. Please try again']
+    
+    title = video_info['title']
+    desc = video_info['description']
+
     batches = []
     last_word = 0
     tokens_words = 2/3
@@ -62,8 +74,8 @@ async def fetch_data_from_llama(video_id):
     # NOTE: 5 sec requirements don't give us an opportunity to load more sentences.
     # But we could to load from different pieces of text
     # But the main of the video is going at first max sentences
-    text = batches[0]
-    response = await llama.chat.completions.create(
+    content_text = batches[0]
+    response = await llamas[0].chat.completions.create(
         model="meta-llama/Llama-3-8b-chat-hf",
         messages=[
             {
@@ -71,30 +83,30 @@ async def fetch_data_from_llama(video_id):
                 "role": "system"
             },
             {
-                "content": f'Please, create a one-sentence summary of this video text: {text}',
+                "content": f'Please, create a one-sentence summary of this video text: {content_text}',
                 "role": "user"
             },
         ],
     )
 
-    text = response.choices[0].message.content
+    content_summary = response.choices[0].message.content
     try:
-      text: str = json.loads(text)['summary']
+      content_summary: str = json.loads(content_summary)['summary']
     except:
         try:
-          first_bracet = text.index('{')
-          text = text[first_bracet:]
-          text = json.loads(text)['summary']
+          first_bracet = content_summary.index('{')
+          content_summary = content_summary[first_bracet:]
+          content_summary = json.loads(content_summary)['summary']
         except:
-           logging.error(f'Could not json with processing summary: {text}')
-        logging.error(f'Could not json summary: {text}')
+           logging.error(f'Could not json with processing summary: {content_summary}')
+        logging.error(f'Could not json summary: {content_summary}')
 
-    comments = CommentsManager.comments(video_id)
     comments = comments[:int(max_tokens*tokens_words)]
     if comments is None:
-      comments_text = 'Not enough comments'
+      comments_summary = 'Not enough comments'
     else:
-      response = await llama.chat.completions.create(
+      ret_format = '{"summary": "<your summary>"}'
+      response = await llamas[0].chat.completions.create(
           model="meta-llama/Llama-3-8b-chat-hf",
           messages=[
               {
@@ -102,23 +114,57 @@ async def fetch_data_from_llama(video_id):
                   "role": "system"
               },
               {
-                  "content": f'Please, create a one-sentence summary of this video comments: {comments}',
+                  "content": f'Please, create a one-sentence summary of this video comments. Return format: {ret_format}. Comments:\n{comments}',
                   "role": "user"
               },
           ],
       )
 
-      comments_text = response.choices[0].message.content
+      comments_summary = response.choices[0].message.content
       try:
-        comments_text: str = json.loads(comments_text)['summary']
+        comments_summary: str = json.loads(comments_summary)['summary']
       except:
           try:
-            first_bracet = comments_text.index('{')
-            comments_text = comments_text[first_bracet:]
-            comments_text = json.loads(comments_text)['summary']
+            first_bracet = comments_summary.index('{')
+            last_bracet = comments_summary.rindex('}')
+            comments_summary = comments_summary[first_bracet:last_bracet+1]
+            comments_summary = json.loads(comments_summary)['summary']
           except:
             logging.error(
-                f'Could not json with processing summary: {comments_text}')
-          logging.error(f'Could not json summary: {comments_text}')
+                f'Could not json with processing summary: {comments_summary}')
+          logging.error(f'Could not json summary: {comments_summary}')
 
-    return ["45/100", text, comments_text, 'good video tbh']
+    ### rater
+    ret_format = '{"rating": <your rating from 0 to 100>, "justification": <your justification about rating>}'
+    response = await llamas[1].chat.completions.create(
+        model="meta-llama/Llama-3-8b-chat-hf",
+        messages=[
+             {
+                  "content": "You are an ideal video rater. You must give a rating for the video based on its properties given by user. Also you must give a justification about it just in one sentence!!! If there will be more sentences you will be killed. Write result in json format",
+                  "role": "system"
+              },
+             {
+                  "content": f'''Please, rate the video by properties:
+                  title: {title},
+                  description: {desc},
+                  content summary: {content_summary},
+                  comments summary: {comments_summary}.
+
+                  Return format: {ret_format}''',
+                  "role": "user"
+              },
+             ],
+        )
+
+    rating_text: str = response.choices[0].message.content
+    try:
+      json_text = rating_text[rating_text.index('{'): rating_text.rindex('}')+1]
+      jsoned = json.loads(json_text)
+      rating: int = jsoned['rating']
+      justification: str = jsoned['justification']
+    except:
+      logging.error(f'_Could_not_json_rating_: {rating_text}')
+      rating = rating_text[:int(len(rating_text)/2)]
+      justification = rating_text[int(len(rating_text)/2):]
+
+    return [str(rating), content_summary, comments_summary, justification]
