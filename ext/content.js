@@ -12,7 +12,11 @@ document.addEventListener('mouseover', function (event) {
   console.log(`${tagName}, ${className}, ${id}`);
 
   // Mouse at popup
-  if (className == 'video-info-popup' || tagName == 'svg' || tagName == 'img' || className == 'style-scope tp-yt-app-drawer' || className == 'yt-simple-endpoint style-scope ytd-mini-guide-entry-renderer' || className == '' || tagName == 'rect' || className == 'ldBar') {
+  if (className == 'video-info-popup' || tagName == 'svg' ||
+  tagName == 'path' || tagName == 'img' ||
+  className == 'style-scope tp-yt-app-drawer' ||
+  className == 'yt-simple-endpoint style-scope ytd-mini-guide-entry-renderer' ||
+  className == '' || tagName == 'rect' || className == 'ldBar') {
     return;
   }
   // mouse at thumbnail
