@@ -8,9 +8,12 @@ class CommentsManager:
   async def comments(cls, video_id: str):
     comments_request = YtManager.youtube.commentThreads().list(part='snippet,replies',
                                                     maxResults=100, videoId=video_id)
-    response = await asyncio.to_thread(comments_request.execute)
+    try:
+      response = await asyncio.to_thread(comments_request.execute)
+    except Exception as e:
+      response = None
 
-    if 'items' not in response or len(response['items']) == 0:
+    if response is None or 'items' not in response or len(response['items']) == 0:
       return None
 
     comments = ''
