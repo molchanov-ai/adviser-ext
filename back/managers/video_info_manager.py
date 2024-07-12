@@ -1,13 +1,14 @@
 from .yt_manager import YtManager
 
+import asyncio
 
 class VideoInfoManager:
 
   # TODO: async
   @classmethod
-  def video_info(cls, video_id: str):
+  async def video_info(cls, video_id: str):
     video_request = YtManager.youtube.videos().list(part='snippet', id=video_id)
-    response = video_request.execute()
+    response = await asyncio.to_thread(video_request.execute)
 
     if 'items' not in response or len(response['items']) == 0:
       return None

@@ -57,7 +57,7 @@ async def fetch_data_from_llama(video_id):
     except Exception as e:
       logging.error(f'_no_content_: {e}')
       content = f'We can not get video content so you should understand its content by comments. The comments:\n{comments}'
-    video_info = VideoInfoManager.video_info(video_id)
+    video_info = await VideoInfoManager.video_info(video_id)
 
     if not video_info:
       return ['', '', '', 'Error occured. Please try again']
