@@ -73,6 +73,7 @@ function showPopup(thumbnail) {
 
   popup.id = popupId;
   popup.className = 'video-info-popup';
+  popup.style.maxWidth = '600px';
   popup.innerHTML = `
     <div id="loading"></div>
     <div id="clickbait-rating"></div>
