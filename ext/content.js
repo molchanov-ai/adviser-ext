@@ -3,10 +3,6 @@ let timerId = null;
 
 let url = 'https://507e6687-4236-4ae1-9220-c40483674512-00-9piah707l5p1.spock.replit.dev';
 
-function startProcessing(target) {
-  showPopup(target);
-}
-
 document.addEventListener('mouseover', function (event) {
   let tagName = event.target.tagName.toLowerCase();
   let className = event.target.className;
@@ -28,22 +24,38 @@ document.addEventListener('mouseover', function (event) {
   if (className == staticPreviewClassName || dynamicPreviewCondition) {
     let popup = document.querySelector('.video-info-popup');
 
-    if (popup != null) {
-      return;
-    }
-
     if (className == staticPreviewClassName) {
       var videoThumbnail = event.target.parentNode.parentNode;
     } else {
       var videoThumbnail = document.querySelector('#media-container-link');
     }
 
+    if (videoThumbnail.href.includes('v=')) {
+      var videoId = videoThumbnail.href.split('v=')[1].split('&')[0];
+    } else if (videoThumbnail.href.includes('shorts')) {
+      var videoId = videoThumbnail.href.split('/').at(-1);
+    } else {
+      console.error('Incompatible state');
+      return;
+    }
+
+    if (videoId.includes('&')) {
+      videoId = videoId.split('&')[0];
+    }
+
+    if (popup != null && popup.id.includes(videoId)) {
+      return;
+    }
+
+    let popups = document.querySelectorAll('.video-info-popup');
+    popups.forEach((e) => e.remove());
+
     if (timerId != null) {
       clearTimeout(timerId);
       timerId = null;
     }
 
-    timerId = setTimeout(() => startProcessing(videoThumbnail), 1500);
+    timerId = setTimeout(() => showPopup(videoThumbnail, videoId), 1500);
   } else { // Mouse not on thumbnail and popup
     if (timerId != null) {
       clearTimeout(timerId);
@@ -55,19 +67,7 @@ document.addEventListener('mouseover', function (event) {
   }
 });
 
-function showPopup(thumbnail) {
-  if (thumbnail.href.includes('v=')) {
-    var videoId = thumbnail.href.split('v=')[1].split('&')[0];
-  } else if (thumbnail.href.includes('shorts')) {
-    var videoId = thumbnail.href.split('/').at(-1);
-  } else {
-    console.error('Incompatible state');
-    return;
-  }
-  if (videoId.includes('&')) {
-    videoId = videoId.split('&')[0];
-  }
-
+function showPopup(thumbnail, videoId) {
   let popup = document.createElement('div');
   let popupId = `video-info-popup-${videoId}`;
 
