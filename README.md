@@ -3,16 +3,25 @@ Get YouTube video interest estimation based on content, comments and base video 
 
 ## Features
 
-- ✔️ Shorts support
-- ✔️ Dynamic and static thumbnail support
-- ✔️ Main page, related column and search page support
-- ✔️ 1.5 sec delay waiting user decision on the video
-- ✔️ Agents balancing architechture
-- ✔️ Smooth loading animation
-- ✔️ Comments replies are taken into account
-- ✔️ No subtitles in video – not a problem. Lets analyse comments as content producer
-- ✔️ Async architechture
-- ✔️ Fast processing
+✔️ Shorts support
+
+✔️ Dynamic and static thumbnail support
+
+✔️ Main page, related column and search page support
+
+✔️ 1.5 sec delay waiting user decision on the video
+
+✔️ Agents balancing architechture
+
+✔️ Smooth loading animation
+
+✔️ Comments replies are taken into account
+
+✔️ No subtitles in video – not a problem. Lets analyse comments as content producer
+
+✔️ Async architechture
+
+✔️ Fast processing
 
 ## Installation
 ```
