@@ -11,8 +11,8 @@ class ContentAgent:
     tokens_words = 2/3
     max_tokens = 7600
 
-    # NOTE: 5 sec requirements don't give us an opportunity to load more sentences.
-    # But we could to load from different pieces of text
+    # NOTE: 5 sec requirement don't give us an opportunity to load more sentences.
+    # But we could load from different pieces of text
     # But the main of the video is going at first max sentences
     content_text = text[:int(max_tokens*tokens_words)]
     ret_format = '{"summary": "<your summary>"}'
