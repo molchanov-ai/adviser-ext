@@ -69,9 +69,9 @@ async def fetch_data_from_llama(video_id):
     comments_summary = await CommentsAgent.summary(comments)
     rating, justification = await RaterAgent.rate({
         'title': title,
-        # 'description': desc,
-        # 'content_summary': content_summary,
-        # 'comments_summary': comments_summary
+        'description': desc,
+        'content_summary': content_summary,
+        'comments_summary': comments_summary
     })
 
     return [str(rating), content_summary, comments_summary, justification]

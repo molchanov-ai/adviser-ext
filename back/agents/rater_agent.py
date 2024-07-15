@@ -18,27 +18,9 @@ class RaterAgent:
 You must give a clickbait rating for the video based 
 on its properties given by user. So you should understand 
 how video's properties attract attention and encourage people. 
-The most weight must have a video title. Examples of 100/100 clickbait: 
-"These two zodiac signs will be swimming in money in 2021",
-"To get rid of fungus, rub in a penny Soviet ...",
-"This guy from your city became a millionaire thanks to...",
-"Nightmares of 21st century",
-"This is what kills you every day",
-"Naked girl is dancing"
 
-Example of 0/100 clickbait: "Description how software works?"
-
-Clickbait conditions with rating points:
-1) contains sensation information, that can surprise a user - 40 points
-2) contains mystery - 30 points
-3) claims a problem common for people something like human routine, love problems, criminal, etc - 70 points
-4) evokes primitive emotions: curiosity, anger, sexuality, envy, thirst for easy money - 30 points
-5) contains wow effect - 80 points
-6) tells about something epic - 50 points
-7) info about someone famous – 30 points
-
-Sum these points above to get a rating otherwise you will be killed!! If the sum is > 100, the rating is 100.
-Think yourself!
+Sum these properties up to get a rating otherwise you will be killed!! Max rating is 100, min is 0.
+Think yourself! Make your rating very accurately.
 
 Also you must give a justification about it just in one sentence!!!
 If there will be more sentences you will be killed.
